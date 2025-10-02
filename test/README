@@ -1,32 +1,97 @@
-# 🚦 Dự án: Điều khiển 2 LED bằng OneButton trên ESP32
+# Dự án điều khiển 2 LED bằng một nút nhấn sử dụng thư viện OneButton
 
-## 📖 Giới thiệu
-Dự án này minh họa cách sử dụng thư viện **OneButton** để điều khiển **2 LED** chỉ bằng **một nút nhấn duy nhất**.
+## 1. Giới thiệu
+Dự án minh họa cách sử dụng **ESP32** (hoặc Arduino) và thư viện **OneButton** để điều khiển **hai LED** bằng **một nút nhấn duy nhất**.  
+Các chức năng:
+- **Single Click**: bật/tắt LED đang được chọn.  
+- **Double Click**: chuyển đổi LED được điều khiển (giữa LED1 và LED2).  
+- **Long Press (>1s)**: LED đang được điều khiển nhấp nháy 200ms.  
 
-### Các chức năng chính
-- **Single Click** → Bật/tắt LED hiện tại.
-- **Double Click** → Chuyển quyền điều khiển qua lại giữa LED1 và LED2.
-- **Long Press (>1s)** → Làm LED đang điều khiển nhấp nháy với chu kỳ 200ms.
+## 2. Yêu cầu phần cứng
+- 01 board ESP32 (hoặc Arduino Uno/Nano/MEGA).  
+- 01 LED ngoài (nối vào GPIO4).  
+- 01 LED tích hợp sẵn trên devboard (LED_BUILTIN, thường GPIO2 trên ESP32).  
+- 01 nút nhấn ngoài (GPIO35).  
+- 01 điện trở 220Ω cho LED ngoài.  
+- Breadboard + dây nối.  
 
----
+### Sơ đồ kết nối
+- LED1 → LED tích hợp sẵn (LED_BUILTIN).  
+- LED2 → GPIO4 + điện trở 220Ω → GND.  
+- Nút bấm → GPIO35 (INPUT_PULLUP).  
 
-## 🛠️ Phần cứng
-- ESP32 DevKit
-- **LED1**: GPIO4 (qua điện trở 220Ω)
-- **LED2**: GPIO5 (qua điện trở 220Ω)
-- **Button**: GPIO18, cấu hình INPUT_PULLUP (1 chân → GND, 1 chân → GPIO18)
+## 3. Yêu cầu phần mềm
+- **PlatformIO** trong Visual Studio Code.  
+- Thư viện **OneButton**.  
 
----
+## 4. Chức năng chính
+- **Single Click**: bật/tắt LED đang được điều khiển.  
+- **Double Click**: đổi LED điều khiển (từ LED1 ↔ LED2).  
+- **Long Press**: LED hiện tại nhấp nháy 200ms ON/OFF.  
 
-## 💻 Phần mềm
-- **PlatformIO** (Arduino framework)
-- Thư viện: **OneButton**
+## 5. Nguyên lý hoạt động
+- Sử dụng thư viện **OneButton** để nhận diện thao tác: `attachClick()`, `attachDoubleClick()`, `attachLongPressStart()` / `attachDuringLongPress()`.  
+- Biến `currentLed` dùng để biết LED nào đang được điều khiển.  
+- Biến `blinking` để kiểm soát trạng thái nhấp nháy.  
 
----
+## 6. Code chính (src/main.cpp)
 
-## 🚀 Cách sử dụng
-Clone dự án về máy và di chuyển vào thư mục:
+```cpp
+#include <Arduino.h>
+#include <OneButton.h>
 
-```bash
-git clone https://github.com/<tài-khoản-github>/Button_LED.git
-cd Button_LED
+#define LED1_PIN 2   // LED tích hợp sẵn (ESP32 thường GPIO2)
+#define LED2_PIN 4   // LED ngoài
+#define BUTTON_PIN 35
+
+OneButton button(BUTTON_PIN, true);
+
+int currentLed = LED1_PIN;  // mặc định LED1
+bool ledState = false;
+bool blinking = false;
+unsigned long prevMillis = 0;
+
+void handleClick() {
+  // Single click -> bật/tắt LED đang chọn
+  blinking = false;
+  ledState = !ledState;
+  digitalWrite(currentLed, ledState);
+}
+
+void handleDoubleClick() {
+  // Double click -> đổi LED điều khiển
+  blinking = false;
+  digitalWrite(currentLed, LOW); // tắt LED trước khi đổi
+  if (currentLed == LED1_PIN) currentLed = LED2_PIN;
+  else currentLed = LED1_PIN;
+  ledState = false;
+}
+
+void handleLongPressStart() {
+  // Khi giữ nút -> LED nhấp nháy
+  blinking = true;
+}
+
+void setup() {
+  pinMode(LED1_PIN, OUTPUT);
+  pinMode(LED2_PIN, OUTPUT);
+  digitalWrite(LED1_PIN, LOW);
+  digitalWrite(LED2_PIN, LOW);
+
+  button.attachClick(handleClick);
+  button.attachDoubleClick(handleDoubleClick);
+  button.attachLongPressStart(handleLongPressStart);
+}
+
+void loop() {
+  button.tick();
+
+  if (blinking) {
+    unsigned long currentMillis = millis();
+    if (currentMillis - prevMillis >= 200) { // 200ms
+      prevMillis = currentMillis;
+      ledState = !ledState;
+      digitalWrite(currentLed, ledState);
+    }
+  }
+}
