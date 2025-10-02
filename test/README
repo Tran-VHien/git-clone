@@ -1,11 +1,28 @@
+Dự án: Điều khiển 2 LED bằng OneButton trên ESP32
+📖 Giới thiệu
 
-This directory is intended for PlatformIO Test Runner and project tests.
+Dự án này minh họa cách sử dụng thư viện OneButton để điều khiển 2 LED chỉ bằng một nút nhấn duy nhất.
 
-Unit Testing is a software testing method by which individual units of
-source code, sets of one or more MCU program modules together with associated
-control data, usage procedures, and operating procedures, are tested to
-determine whether they are fit for use. Unit testing finds problems early
-in the development cycle.
+Các chức năng chính:
 
-More information about PlatformIO Unit Testing:
-- https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+Single Click → Bật/tắt LED hiện tại.
+
+Double Click → Chuyển quyền điều khiển qua lại giữa LED1 và LED2.
+
+Long Press (>1s) → Làm LED đang điều khiển nhấp nháy với chu kỳ 200ms.
+
+🛠️ Phần cứng sử dụng
+
+ESP32 DevKit.
+
+LED1: nối vào GPIO4 (qua điện trở 220Ω).
+
+LED2: nối vào GPIO5 (qua điện trở 220Ω).
+
+Button: nối vào GPIO18, cấu hình INPUT_PULLUP (một chân → GND, một chân → GPIO18).
+
+💻 Phần mềm
+
+PlatformIO (Arduino framework).
+
+Thư viện: OneButton.
