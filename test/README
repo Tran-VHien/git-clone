@@ -24,3 +24,9 @@ Dự án này minh họa cách sử dụng thư viện **OneButton** để đi�
 
 ---
 
+## 🚀 Cách sử dụng
+Clone dự án về máy và di chuyển vào thư mục:
+
+```bash
+git clone https://github.com/<tài-khoản-github>/Button_LED.git
+cd Button_LED
