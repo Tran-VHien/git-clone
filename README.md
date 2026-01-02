@@ -1,6 +1,6 @@
 #  Dự án: Điều khiển 2 LED bằng OneButton trên ESP32
 
-## 📖 Giới thiệu
+##  Giới thiệu
 Dự án này minh họa cách sử dụng thư viện **OneButton** để điều khiển **2 LED** chỉ bằng **một nút nhấn duy nhất**.
 
 ### Các chức năng chính
