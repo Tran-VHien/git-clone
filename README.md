@@ -1,4 +1,4 @@
-# 🚦 Dự án: Điều khiển 2 LED bằng OneButton trên ESP32
+#  Dự án: Điều khiển 2 LED bằng OneButton trên ESP32
 
 ## 📖 Giới thiệu
 Dự án này minh họa cách sử dụng thư viện **OneButton** để điều khiển **2 LED** chỉ bằng **một nút nhấn duy nhất**.
@@ -10,7 +10,7 @@ Dự án này minh họa cách sử dụng thư viện **OneButton** để đi�
 
 ---
 
-## 🛠️ Phần cứng
+##  Phần cứng
 - ESP32 DevKit
 - **LED1**: GPIO4 (qua điện trở 220Ω)
 - **LED2**: GPIO5 (qua điện trở 220Ω)
@@ -18,13 +18,13 @@ Dự án này minh họa cách sử dụng thư viện **OneButton** để đi�
 
 ---
 
-## 💻 Phần mềm
+##  Phần mềm
 - **PlatformIO** (Arduino framework)
 - Thư viện: **OneButton**
 
 ---
 
-## 🚀 Cách sử dụng
+##  Cách sử dụng
 Clone dự án về máy và di chuyển vào thư mục:
 
 ```bash
